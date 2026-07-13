@@ -8,6 +8,14 @@ title: E-wallet
 ---
 erDiagram
 
+users ||--O| users_spi : "has"
+
+users   ||--o{ users_wallets : "has"
+wallets ||--o{ users_wallets : "owned via"
+
+transactions ||--O{ entries : "detailed by"
+wallets      ||--O{ entries : "mutated by"
+
 users {
     int id PK
 
@@ -15,10 +23,9 @@ users {
     date  updated_at
     date? deleted_at
 
-    int id_spi    FK
-    int id_wallet FK
+    int id_spi FK
 
-    bool status_verified
+    string display_name
 
 }
 
@@ -29,7 +36,7 @@ users_spi {
     date  updated_at
     date? deleted_at
 
-    date verified_at
+    date? verified_at
 
     string ssn        UK
     string legal_name
@@ -45,7 +52,17 @@ wallets {
     date  updated_at
     date? deleted_at
 
-    bigint balance
+    bigint balance_idr
+}
+
+users_wallets {
+    int id PK
+
+    date  created_at
+    date? deleted_at
+
+    int id_user   FK
+    int id_wallet FK
 }
 
 transactions {
@@ -55,22 +72,28 @@ transactions {
     date  updated_at
     date? deleted_at
 
-    int enum_type
+    enum type
 
     string  ref_internal
-    string? ref_exernal
+    string? ref_external
     string? provider
     string? note
+
+    enum status
 }
 
 entries {
     int id PK
 
+    date  created_at
+    date  updated_at
+    date? deleted_at
+
     int id_wallet      FK
     int id_transaction FK
 
     bigint amount
-    bigint balance_after
+    bigint balance_idr_after
 }
 ```
 
