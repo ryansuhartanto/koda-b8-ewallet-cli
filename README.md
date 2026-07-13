@@ -10,8 +10,8 @@ erDiagram
 
 users ||--O| users_spi : "has"
 
-users   ||--o{ users_wallets : "has"
-wallets ||--o{ users_wallets : "owned via"
+users   ||--O{ users_wallets : "has"
+wallets ||--O{ users_wallets : "owned via"
 
 transactions ||--O{ entries : "detailed by"
 wallets      ||--O{ entries : "mutated by"
@@ -19,9 +19,9 @@ wallets      ||--O{ entries : "mutated by"
 users {
     int id PK
 
-    date  created_at
-    date  updated_at
-    date? deleted_at
+    timestamp  created_at
+    timestamp  updated_at
+    timestamp? deleted_at
 
     int id_spi FK
 
@@ -32,11 +32,11 @@ users {
 users_spi {
     int id PK
 
-    date  created_at
-    date  updated_at
-    date? deleted_at
+    timestamp  created_at
+    timestamp  updated_at
+    timestamp? deleted_at
 
-    date? verified_at
+    timestamp? verified_at
 
     string ssn        UK
     string legal_name
@@ -48,9 +48,9 @@ users_spi {
 wallets {
     int id PK
 
-    date  created_at
-    date  updated_at
-    date? deleted_at
+    timestamp  created_at
+    timestamp  updated_at
+    timestamp? deleted_at
 
     bigint balance_idr
 }
@@ -58,8 +58,8 @@ wallets {
 users_wallets {
     int id PK
 
-    date  created_at
-    date? deleted_at
+    timestamp  created_at
+    timestamp? deleted_at
 
     int id_user   FK
     int id_wallet FK
@@ -68,9 +68,9 @@ users_wallets {
 transactions {
     int id PK
 
-    date  created_at
-    date  updated_at
-    date? deleted_at
+    timestamp  created_at
+    timestamp  updated_at
+    timestamp? deleted_at
 
     enum type
 
@@ -85,9 +85,7 @@ transactions {
 entries {
     int id PK
 
-    date  created_at
-    date  updated_at
-    date? deleted_at
+    timestamp created_at
 
     int id_wallet      FK
     int id_transaction FK
