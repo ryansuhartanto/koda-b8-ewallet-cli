@@ -8,13 +8,13 @@ title: E-wallet
 ---
 erDiagram
 
-users ||--O| users_spi : "has"
+users ||--o| users_spi : "has"
 
-users   ||--O{ users_wallets : "has"
-wallets ||--O{ users_wallets : "owned via"
+users   ||--o{ users_wallets : "has"
+wallets ||--o{ users_wallets : "owned via"
 
-transactions ||--O{ entries : "detailed by"
-wallets      ||--O{ entries : "mutated by"
+transactions ||--o{ entries : "detailed by"
+wallets      ||--o{ entries : "mutated by"
 
 users {
     int id PK
