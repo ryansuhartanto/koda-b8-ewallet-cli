@@ -1,0 +1,10 @@
+[tools]
+"go:github.com/golang-migrate/migrate/v4/cmd/migrate" = { version = "latest", tags = "postgres" }
+
+[tasks.run]
+usage = 'arg "[cmd]"'
+run = 'go run ${usage_cmd:-.}'
+
+[tasks."db.create"]
+usage = 'arg "[name]"'
+run = 'migrate create -ext sql -dir db -seq ${usage_name}'
