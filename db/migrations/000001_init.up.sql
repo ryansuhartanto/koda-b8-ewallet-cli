@@ -39,7 +39,6 @@ CREATE TABLE users_wallets (
 
     id_user BIGINT NOT NULL REFERENCES users (id),
     id_wallet BIGINT NOT NULL REFERENCES wallets (id),
-
     PRIMARY KEY (id_user, id_wallet)
 );
 
@@ -64,12 +63,11 @@ CREATE TABLE transactions (
 );
 
 CREATE TABLE entries (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     id_wallet BIGINT NOT NULL REFERENCES wallets (id),
     id_transaction BIGINT NOT NULL REFERENCES transactions (id),
+    PRIMARY KEY (id_user, id_wallet),
 
     amount BIGINT NOT NULL,
     balance_idr_after BIGINT NOT NULL

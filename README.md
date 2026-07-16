@@ -76,12 +76,10 @@ transactions {
 }
 
 entries {
-    int id PK
-
     timestamp created_at
 
-    int id_wallet      FK
-    int id_transaction FK
+    int id_wallet      PK,FK
+    int id_transaction PK,FK
 
     bigint amount
     bigint balance_idr_after
