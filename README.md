@@ -54,13 +54,10 @@ wallets {
 }
 
 users_wallets {
-    int id PK
-
     timestamp  created_at
-    timestamp? deleted_at
 
-    int id_user   FK
-    int id_wallet FK
+    int id_user   PK,FK
+    int id_wallet PK,FK
 }
 
 transactions {

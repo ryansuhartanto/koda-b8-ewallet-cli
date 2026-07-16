@@ -36,13 +36,12 @@ CREATE TABLE wallets (
 );
 
 CREATE TABLE users_wallets (
-    id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    deleted_at TIMESTAMP,
 
     id_user BIGINT NOT NULL REFERENCES users (id),
-    id_wallet BIGINT NOT NULL REFERENCES wallets (id)
+    id_wallet BIGINT NOT NULL REFERENCES wallets (id),
+
+    PRIMARY KEY (id_user, id_wallet)
 );
 
 CREATE TYPE transaction_type AS ENUM ('topup', 'withdraw', 'transfer', 'payment');
