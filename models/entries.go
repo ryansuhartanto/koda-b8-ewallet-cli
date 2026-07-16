@@ -7,12 +7,10 @@ import (
 )
 
 type Entry struct {
-	db.ID
-
 	CreatedAt *time.Time
 
-	IdWallet      int64
-	IdTransaction int64
+	IdWallet      db.ID
+	IdTransaction db.ID
 
 	Amount          int64
 	BalanceIdrAfter int64
