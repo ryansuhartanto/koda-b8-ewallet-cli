@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"errors"
 	"log"
 
 	"github.com/golang-migrate/migrate/v4"
@@ -24,7 +25,7 @@ func init() {
 	}
 
 	err = m.Up()
-	if err != nil {
+	if err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		log.Panicln("Error migrating database", err)
 	}
 }
