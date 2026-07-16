@@ -55,12 +55,12 @@ CREATE TABLE transactions (
     deleted_at TIMESTAMP,
 
     type transaction_type NOT NULL,
-    status transaction_status NOT NULL DEFAULT 'pending'
+    status transaction_status NOT NULL DEFAULT 'pending',
 
     ref_internal VARCHAR NOT NULL,
     ref_external VARCHAR,
     provider VARCHAR,
-    note VARCHAR,
+    note VARCHAR
 );
 
 CREATE TABLE entries (
