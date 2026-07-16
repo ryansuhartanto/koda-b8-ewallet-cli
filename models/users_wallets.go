@@ -1,10 +1,14 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/ryansuhartanto/koda-b8-ewallet-cli/db"
+)
 
 type UserWallet struct {
 	CreatedAt *time.Time
 
-	IdUser   int64
-	IdWallet int64
+	IDUser   db.ID
+	IDWallet db.ID
 }

@@ -1,9 +1,13 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/ryansuhartanto/koda-b8-ewallet-cli/db"
+)
 
 type UserSpi struct {
-	Id int64
+	db.ID
 
 	CreatedAt *time.Time
 	UpdatedAt *time.Time

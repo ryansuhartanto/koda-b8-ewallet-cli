@@ -1,9 +1,30 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"github.com/ryansuhartanto/koda-b8-ewallet-cli/db"
+)
+
+type TransactionType string
+
+const (
+	TransactionTypeTopup    TransactionType = "topup"
+	TransactionTypeWithdraw TransactionType = "withdraw"
+	TransactionTypeTransfer TransactionType = "transfer"
+	TransactionTypePayment  TransactionType = "payment"
+)
+
+type TransactionStatus string
+
+const (
+	TransactionStatusPending TransactionStatus = "pending"
+	TransactionStatusSuccess TransactionStatus = "success"
+	TransactionStatusFailed  TransactionStatus = "failed"
+)
 
 type Transaction struct {
-	Id int64
+	db.ID
 
 	CreatedAt *time.Time
 	UpdatedAt *time.Time
