@@ -7,4 +7,4 @@ run = 'go run ${usage_cmd:-.}'
 
 [tasks."db.create"]
 usage = 'arg "[name]"'
-run = 'migrate create -ext sql -dir db -seq ${usage_name}'
+run = 'migrate create -ext sql -dir db/migrations -seq ${usage_name}'
