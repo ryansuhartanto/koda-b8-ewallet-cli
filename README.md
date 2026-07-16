@@ -23,10 +23,7 @@ users {
     timestamp  updated_at
     timestamp? deleted_at
 
-    int id_spi FK
-
     string display_name
-
 }
 
 users_spi {
@@ -36,6 +33,7 @@ users_spi {
     timestamp  updated_at
     timestamp? deleted_at
 
+    int        id_user     FK
     timestamp? verified_at
 
     string ssn        UK
