@@ -1,10 +1,10 @@
 package main
 
 import (
-	"fmt"
+	"context"
 	"log"
-	"os"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/joho/godotenv"
 )
 
@@ -14,5 +14,8 @@ func main() {
 		log.Panic("Error loading .env file", err)
 	}
 
-	fmt.Println(os.Getenv("PGDATABASE"))
+	_, err = pgx.Connect(context.Background(), "")
+	if err != nil {
+		log.Panic("Error connecting to database", err)
+	}
 }
