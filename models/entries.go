@@ -9,8 +9,8 @@ import (
 type Entry struct {
 	CreatedAt *time.Time
 
-	IdWallet      db.ID
-	IdTransaction db.ID
+	IDWallet      db.ID
+	IDTransaction db.ID
 
 	Amount          int64
 	BalanceIdrAfter int64

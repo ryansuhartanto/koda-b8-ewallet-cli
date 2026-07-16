@@ -15,3 +15,5 @@ type Wallet struct {
 
 	BalanceIdr int64
 }
+
+type RepoWallets db.RepoSoftDelete[Wallet, db.ID]

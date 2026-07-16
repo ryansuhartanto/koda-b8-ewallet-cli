@@ -2,11 +2,26 @@ package db
 
 import (
 	"context"
-	"fmt"
+	"iter"
+	"strconv"
 	"strings"
 
 	"github.com/jackc/pgx/v5"
 )
+
+type Key interface {
+	Bindings() iter.Seq2[string, any]
+}
+
+type ID int64
+
+func (id ID) Bindings() iter.Seq2[string, any] {
+	return func(yield func(string, any) bool) {
+		if !yield("id", id) {
+			return
+		}
+	}
+}
 
 type Repo[T any] struct {
 	db    Querier
@@ -25,29 +40,38 @@ func (r Repo[T]) List(ctx context.Context) ([]T, error) {
 	return pgx.CollectRows(rows, pgx.RowToStructByName[T])
 }
 
-type RepoKeyed[T any, K Key] struct {
-	Repo[T]
+type RepoKeyed[T any, K Key] Repo[T]
+
+func NewRepoKeyeded[T any, K Key](db Querier, table string) RepoKeyed[T, K] {
+	return RepoKeyed[T, K](NewRepo[T](db, table))
 }
 
-func NewRepoKeyed[T any, K Key](db Querier, table string) RepoKeyed[T, K] {
-	return RepoKeyed[T, K]{NewRepo[T](db, table)}
-}
+func conjunction(preds iter.Seq2[string, any]) (string, []any) {
+	var sb strings.Builder
+	var args []any
 
-func wherePredicates(cols []string) string {
-	preds := make([]string, len(cols))
-	for i, c := range cols {
-		preds[i] = fmt.Sprintf(`%q = $%d`, c, i+1)
+	for col, val := range preds {
+		if len(args) > 0 {
+			sb.WriteString(" AND ")
+		}
+		sb.WriteString(col)
+		sb.WriteString(" = $")
+		sb.WriteString(strconv.Itoa(len(args) + 1))
+
+		args = append(args, val)
 	}
-	return strings.Join(preds, " AND ")
+
+	return sb.String(), args
 }
 
 func (r RepoKeyed[T, K]) Get(ctx context.Context, key K) (T, error) {
 	var zero T
+	predicates, values := conjunction(key.Bindings())
 
 	rows, err := r.db.Query(
 		ctx,
-		`SELECT * FROM `+r.table+` WHERE `+wherePredicates(key.Columns()),
-		key.Values()...,
+		`SELECT * FROM `+r.table+` WHERE `+predicates,
+		values...,
 	)
 	if err != nil {
 		return zero, err
@@ -56,20 +80,20 @@ func (r RepoKeyed[T, K]) Get(ctx context.Context, key K) (T, error) {
 }
 
 func (r RepoKeyed[T, K]) Delete(ctx context.Context, key K) error {
+	predicates, values := conjunction(key.Bindings())
+
 	_, err := r.db.Exec(
 		ctx,
-		`DELETE FROM `+r.table+` WHERE `+wherePredicates(key.Columns()),
-		key.Values()...,
+		`DELETE FROM `+r.table+` WHERE `+predicates,
+		values...,
 	)
 	return err
 }
 
-type RepoSoftDelete[T any, K Key] struct {
-	RepoKeyed[T, K]
-}
+type RepoSoftDelete[T any, K Key] RepoKeyed[T, K]
 
 func NewRepoSoftDelete[T any, K Key](db Querier, table string) RepoSoftDelete[T, K] {
-	return RepoSoftDelete[T, K]{NewRepoKeyed[T, K](db, table)}
+	return RepoSoftDelete[T, K](NewRepoKeyeded[T, K](db, table))
 }
 
 func (r RepoSoftDelete[T, K]) List(ctx context.Context) ([]T, error) {
@@ -82,12 +106,13 @@ func (r RepoSoftDelete[T, K]) List(ctx context.Context) ([]T, error) {
 
 func (r RepoSoftDelete[T, K]) Get(ctx context.Context, key K) (T, error) {
 	var zero T
+	predicates, values := conjunction(key.Bindings())
 
 	rows, err := r.db.Query(
 		ctx,
 		`SELECT * FROM `+r.table+
-			` WHERE `+wherePredicates(key.Columns())+` AND "deleted_at" IS NULL`,
-		key.Values()...,
+			` WHERE `+predicates+` AND "deleted_at" IS NULL`,
+		values...,
 	)
 	if err != nil {
 		return zero, err
@@ -96,12 +121,14 @@ func (r RepoSoftDelete[T, K]) Get(ctx context.Context, key K) (T, error) {
 }
 
 func (r RepoSoftDelete[T, K]) Delete(ctx context.Context, key K) error {
+	predicates, values := conjunction(key.Bindings())
+
 	_, err := r.db.Exec(
 		ctx,
 		`UPDATE `+r.table+
 			` SET "deleted_at" = CURRENT_TIMESTAMP`+
-			` WHERE `+wherePredicates(key.Columns())+` AND "deleted_at" IS NULL`,
-		key.Values()...,
+			` WHERE `+predicates+` AND "deleted_at" IS NULL`,
+		values...,
 	)
 	return err
 }

@@ -38,3 +38,5 @@ type Transaction struct {
 	Provider    *string
 	Note        *string
 }
+
+type RepoTransactions db.RepoSoftDelete[Transaction, db.ID]

@@ -19,5 +19,7 @@ type UserSPI struct {
 	LegalName string
 	Dob       time.Time
 
-	TaxId string
+	TaxID string
 }
+
+type RepoUserSPI db.RepoSoftDelete[UserSPI, db.ID]

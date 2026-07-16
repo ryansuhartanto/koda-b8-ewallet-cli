@@ -15,3 +15,5 @@ type User struct {
 
 	DisplayName string
 }
+
+type RepoUsers db.RepoSoftDelete[User, db.ID]
