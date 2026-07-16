@@ -27,13 +27,12 @@ users {
 }
 
 users_spi {
-    int id PK
+    int id PK,FK
 
     timestamp  created_at
     timestamp  updated_at
     timestamp? deleted_at
 
-    int        id_user     FK
     timestamp? verified_at
 
     string ssn        UK

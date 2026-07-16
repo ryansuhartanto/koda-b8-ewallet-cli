@@ -9,7 +9,6 @@ type UserSpi struct {
 	UpdatedAt *time.Time
 	DeletedAt *time.Time
 
-	IdUser     int64
 	VerifiedAt *time.Time
 
 	Ssn       string
