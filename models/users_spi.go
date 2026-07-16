@@ -6,7 +6,7 @@ import (
 	"github.com/ryansuhartanto/koda-b8-ewallet-cli/db"
 )
 
-type UserSpi struct {
+type UserSPI struct {
 	db.ID
 
 	CreatedAt *time.Time
