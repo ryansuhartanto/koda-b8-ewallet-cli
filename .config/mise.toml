@@ -1,6 +1,9 @@
 [tools]
 "go:github.com/golang-migrate/migrate/v4/cmd/migrate" = { version = "latest", tags = "postgres" }
 
+[env]
+_.file = { path = '.env', redact = true }
+
 [tasks.run]
 usage = 'arg "[cmd]"'
 run = 'go run ${usage_cmd:-.}'

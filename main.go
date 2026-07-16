@@ -1,7 +1,18 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"log"
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 func main() {
-	fmt.Println("Hello, World!")
+	err := godotenv.Load()
+	if err != nil {
+		log.Panic("Error loading .env file", err)
+	}
+
+	fmt.Println(os.Getenv("PGDATABASE"))
 }
