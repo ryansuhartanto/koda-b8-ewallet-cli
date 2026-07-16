@@ -71,13 +71,12 @@ transactions {
     timestamp? deleted_at
 
     enum type
+    enum status
 
     string  ref_internal
     string? ref_external
     string? provider
     string? note
-
-    enum status
 }
 
 entries {
