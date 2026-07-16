@@ -67,7 +67,7 @@ CREATE TABLE entries (
 
     id_wallet BIGINT NOT NULL REFERENCES wallets (id),
     id_transaction BIGINT NOT NULL REFERENCES transactions (id),
-    PRIMARY KEY (id_user, id_wallet),
+    PRIMARY KEY (id_wallet, id_transaction),
 
     amount BIGINT NOT NULL,
     balance_idr_after BIGINT NOT NULL
