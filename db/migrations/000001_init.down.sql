@@ -14,4 +14,4 @@ DROP TABLE users_spi;
 
 DROP TABLE users;
 
-DROP FUNCTION "update_updated_at"();
+DROP FUNCTION update_updated_at();

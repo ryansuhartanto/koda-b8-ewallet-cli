@@ -79,30 +79,30 @@ CREATE TABLE entries (
 
 --
 
-CREATE FUNCTION "update_updated_at"()
+CREATE FUNCTION update_updated_at()
 RETURNS TRIGGER AS $$
 BEGIN
     IF row(NEW.*) IS DISTINCT FROM row(OLD.*) THEN
-      NEW."updated_at" = CURRENT_TIMESTAMP;
+      NEW.updated_at = CURRENT_TIMESTAMP;
       RETURN NEW;
    ELSE
       RETURN OLD;
    END IF;
 END;
-$$ language 'plpgsql';
+$$ language plpgsql;
 
-CREATE TRIGGER "users_updated_at"
-BEFORE UPDATE ON "users"
-FOR EACH ROW EXECUTE PROCEDURE "update_updated_at"();
+CREATE TRIGGER users_updated_at
+BEFORE UPDATE ON users
+FOR EACH ROW EXECUTE PROCEDURE update_updated_at();
 
-CREATE TRIGGER "users_spi_updated_at"
-BEFORE UPDATE ON "users_spi"
-FOR EACH ROW EXECUTE PROCEDURE "update_updated_at"();
+CREATE TRIGGER users_spi_updated_at
+BEFORE UPDATE ON users_spi
+FOR EACH ROW EXECUTE PROCEDURE update_updated_at();
 
-CREATE TRIGGER "wallets_updated_at"
-BEFORE UPDATE ON "wallets"
-FOR EACH ROW EXECUTE PROCEDURE "update_updated_at"();
+CREATE TRIGGER wallets_updated_at
+BEFORE UPDATE ON wallets
+FOR EACH ROW EXECUTE PROCEDURE update_updated_at();
 
-CREATE TRIGGER "transactions_updated_at"
-BEFORE UPDATE ON "transactions"
-FOR EACH ROW EXECUTE PROCEDURE "update_updated_at"();
+CREATE TRIGGER transactions_updated_at
+BEFORE UPDATE ON transactions
+FOR EACH ROW EXECUTE PROCEDURE update_updated_at();
