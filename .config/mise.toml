@@ -10,10 +10,13 @@ run = 'go run ${usage_cmd:-.}'
 
 [tasks."db.create"]
 usage = 'arg "[name]"'
-run = 'migrate create -ext sql -dir db/migrations -seq ${usage_name}'
+run = 'migrate create -ext sql -dir internal/db/migrations -seq ${usage_name}'
+
+[tasks.db]
+run = 'migrate -database pgx5://: -path internal/db/migrations'
 
 [tasks."db.up"]
-run = 'migrate -database pgx5://: -path db/migrations up'
+run = 'migrate -database pgx5://: -path internal/db/migrations up'
 
 [tasks."db.down"]
-run = 'migrate -database pgx5://: -path db/migrations down'
+run = 'migrate -database pgx5://: -path internal/db/migrations down'

@@ -1,9 +1,9 @@
-package models
+package model
 
 import (
 	"time"
 
-	"github.com/ryansuhartanto/koda-b8-ewallet-cli/db"
+	"github.com/ryansuhartanto/koda-b8-ewallet-cli/internal/db"
 )
 
 type UserSPI struct {
