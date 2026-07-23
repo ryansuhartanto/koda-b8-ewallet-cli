@@ -39,6 +39,18 @@ func (r *UserRepository) Get(ctx context.Context, id model.Id) (*model.User, err
 	return pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[model.User])
 }
 
+func (r *UserRepository) Add(ctx context.Context, displayName string) (*model.User, error) {
+	sql := `INSERT INTO users (display_name) VALUES (@display_name) RETURNING *`
+	args := pgx.StrictNamedArgs{"display_name": displayName}
+	rows, err := r.querier.Query(ctx, sql, args)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[model.User])
+}
+
 func (r *UserRepository) Delete(ctx context.Context, id model.Id) error {
 	sql := `UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = @id AND deleted_at IS NULL`
 	args := pgx.StrictNamedArgs{"id": id}

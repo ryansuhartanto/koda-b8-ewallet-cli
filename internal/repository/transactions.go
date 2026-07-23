@@ -39,6 +39,33 @@ func (r *TransactionRepository) Get(ctx context.Context, id model.Id) (*model.Tr
 	return pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[model.Transaction])
 }
 
+func (r *TransactionRepository) Add(
+	ctx context.Context,
+	typ model.TransactionType,
+	status model.TransactionStatus,
+	refInternal string,
+	note *string,
+) (*model.Transaction, error) {
+	sql := `
+		INSERT INTO transactions (type, status, ref_internal, note)
+		VALUES (@type, @status, @ref_internal, @note)
+		RETURNING *
+	`
+	args := pgx.StrictNamedArgs{
+		"type":         typ,
+		"status":       status,
+		"ref_internal": refInternal,
+		"note":         note,
+	}
+	rows, err := r.querier.Query(ctx, sql, args)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[model.Transaction])
+}
+
 func (r *TransactionRepository) Delete(ctx context.Context, id model.Id) error {
 	sql := `UPDATE transactions SET deleted_at = CURRENT_TIMESTAMP WHERE id = @id AND deleted_at IS NULL`
 	args := pgx.StrictNamedArgs{"id": id}

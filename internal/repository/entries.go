@@ -45,3 +45,42 @@ func (r *EntryRepository) Delete(ctx context.Context, idWallet, idTransaction mo
 	_, err := r.querier.Exec(ctx, sql, args)
 	return err
 }
+
+func (r *EntryRepository) Add(ctx context.Context, idWallet, idTransaction model.Id, amount, balanceAfter int64) (*model.Entry, error) {
+	sql := `
+		INSERT INTO entries (id_wallet, id_transaction, amount, balance_idr_after)
+		VALUES (@id_wallet, @id_transaction, @amount, @balance_idr_after)
+		RETURNING *
+	`
+	args := pgx.StrictNamedArgs{
+		"id_wallet":         idWallet,
+		"id_transaction":    idTransaction,
+		"amount":            amount,
+		"balance_idr_after": balanceAfter,
+	}
+	rows, err := r.querier.Query(ctx, sql, args)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[model.Entry])
+}
+
+func (r *EntryRepository) ListByWallet(ctx context.Context, idWallet model.Id) ([]model.EntryDetail, error) {
+	sql := `
+		SELECT entries.*, transactions.type, transactions.status, transactions.ref_internal, transactions.note
+		FROM entries
+		JOIN transactions ON transactions.id = entries.id_transaction
+		WHERE entries.id_wallet = @id_wallet
+		ORDER BY entries.created_at DESC
+	`
+	args := pgx.StrictNamedArgs{"id_wallet": idWallet}
+	rows, err := r.querier.Query(ctx, sql, args)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return pgx.CollectRows(rows, pgx.RowToStructByName[model.EntryDetail])
+}

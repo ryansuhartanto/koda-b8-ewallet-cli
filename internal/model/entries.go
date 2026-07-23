@@ -11,3 +11,12 @@ type Entry struct {
 	Amount          int64 `db:"amount"`
 	BalanceIdrAfter int64 `db:"balance_idr_after"`
 }
+
+type EntryDetail struct {
+	Entry
+
+	TransactionType   TransactionType   `db:"type"`
+	TransactionStatus TransactionStatus `db:"status"`
+	RefInternal       string            `db:"ref_internal"`
+	Note              *string           `db:"note"`
+}

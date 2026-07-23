@@ -11,3 +11,9 @@ type Wallet struct {
 
 	BalanceIdr int64 `db:"balance_idr"`
 }
+
+type WalletWithOwner struct {
+	Wallet
+
+	DisplayName string `db:"display_name"`
+}

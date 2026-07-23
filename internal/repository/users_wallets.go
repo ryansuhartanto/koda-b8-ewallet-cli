@@ -39,6 +39,18 @@ func (r *UserWalletRepository) Get(ctx context.Context, idUser, idWallet model.I
 	return pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[model.UserWallet])
 }
 
+func (r *UserWalletRepository) Add(ctx context.Context, idUser, idWallet model.Id) (*model.UserWallet, error) {
+	sql := `INSERT INTO users_wallets (id_user, id_wallet) VALUES (@id_user, @id_wallet) RETURNING *`
+	args := pgx.StrictNamedArgs{"id_user": idUser, "id_wallet": idWallet}
+	rows, err := r.querier.Query(ctx, sql, args)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	return pgx.CollectOneRow(rows, pgx.RowToAddrOfStructByName[model.UserWallet])
+}
+
 func (r *UserWalletRepository) Delete(ctx context.Context, idUser, idWallet model.Id) error {
 	sql := `DELETE FROM users_wallets WHERE id_user = @id_user AND id_wallet = @id_wallet`
 	args := pgx.StrictNamedArgs{"id_user": idUser, "id_wallet": idWallet}
