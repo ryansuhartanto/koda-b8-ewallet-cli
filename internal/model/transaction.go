@@ -1,10 +1,6 @@
 package model
 
-import (
-	"time"
-
-	"github.com/ryansuhartanto/koda-b8-ewallet-cli/internal/db"
-)
+import "time"
 
 type TransactionType string
 
@@ -24,19 +20,17 @@ const (
 )
 
 type Transaction struct {
-	db.ID
+	Id `db:"id"`
 
-	CreatedAt *time.Time
-	UpdatedAt *time.Time
-	DeletedAt *time.Time
+	CreatedAt *time.Time `db:"created_at"`
+	UpdatedAt *time.Time `db:"updated_at"`
+	DeletedAt *time.Time `db:"deleted_at"`
 
-	Type   TransactionType
-	Status TransactionStatus
+	Type   TransactionType   `db:"type"`
+	Status TransactionStatus `db:"status"`
 
-	RefInternal *string
-	RefExternal *string
-	Provider    *string
-	Note        *string
+	RefInternal *string `db:"ref_internal"`
+	RefExternal *string `db:"ref_external"`
+	Provider    *string `db:"provider"`
+	Note        *string `db:"note"`
 }
-
-type RepoTransactions db.RepoSoftDelete[Transaction, db.ID]

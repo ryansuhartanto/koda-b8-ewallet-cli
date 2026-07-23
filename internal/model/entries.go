@@ -1,17 +1,13 @@
 package model
 
-import (
-	"time"
-
-	"github.com/ryansuhartanto/koda-b8-ewallet-cli/internal/db"
-)
+import "time"
 
 type Entry struct {
-	CreatedAt *time.Time
+	CreatedAt *time.Time `db:"created_at"`
 
-	IDWallet      db.ID
-	IDTransaction db.ID
+	IDWallet      Id `db:"id_wallet"`
+	IDTransaction Id `db:"id_transaction"`
 
-	Amount          int64
-	BalanceIdrAfter int64
+	Amount          int64 `db:"amount"`
+	BalanceIdrAfter int64 `db:"balance_idr_after"`
 }

@@ -1,19 +1,13 @@
 package model
 
-import (
-	"time"
-
-	"github.com/ryansuhartanto/koda-b8-ewallet-cli/internal/db"
-)
+import "time"
 
 type User struct {
-	db.ID
+	Id `db:"id"`
 
-	CreatedAt *time.Time
-	UpdatedAt *time.Time
-	DeletedAt *time.Time
+	CreatedAt *time.Time `db:"created_at"`
+	UpdatedAt *time.Time `db:"updated_at"`
+	DeletedAt *time.Time `db:"deleted_at"`
 
-	DisplayName string
+	DisplayName string `db:"display_name"`
 }
-
-type RepoUsers db.RepoSoftDelete[User, db.ID]
